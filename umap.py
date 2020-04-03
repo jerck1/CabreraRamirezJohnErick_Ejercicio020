@@ -65,13 +65,13 @@ print(np.shape(Y))
 # In[43]:
 
 
-cnt_2=0
 embedding_best=np.zeros((1137,2,4))
 
 
-# In[45]:
+# In[ ]:
 
 
+cnt_2=0
 plt.figure(1,figsize = (14,14))
 for i in range(2,12,2):
     for j in np.arange(0,1,0.2):
@@ -137,6 +137,20 @@ for i in range(2,12,2):
     for j in np.arange(0,1.2,0.2):
         if (2<=i<=8 and j==0.2):
             print(i)
+
+
+# # Discusión
+
+# Al aplicar umap se observa el agrupamiento de los elementos en un conjunto de líneas, en las cuales cada número está relacionado con el nombre de un mercado de la siguiente forma:
+
+# In[ ]:
+
+
+print("Mercado"," ","Número")
+for i,f in enumerate(files[:n_max]):
+    if(os.stat("{}".format(f)).st_size != 0):
+        print(f[9:-4]," ",i)
+ 
 
 
 # In[ ]:
