@@ -62,41 +62,43 @@ print(np.shape(X))
 print(np.shape(Y))
 
 
-# In[43]:
+# In[71]:
 
 
 embedding_best=np.zeros((1137,2,4))
+metric=["euclidean","manhattan","chebyshev","minkowski"]
 
 
-# In[48]:
+# In[ ]:
 
 
-cnt_2=0
-plt.figure(1,figsize = (14,14))
-for i in range(2,12,2):
-    for j in np.arange(0,1,0.2):
-        reducer = umap.UMAP(n_neighbors=i, min_dist=j, metric='euclidean')#, n_components=2)
-        reducer.fit(X)
-        embedding = reducer.transform(X)
-        np.shape(embedding)   
-        if (2<=i<=8 and j==0.2):
-            embedding_best[:,:,int(i/2)-1]=embedding
-        np.shape(embedding)
-        cnt_2+=1
-        plt.subplot(5,5,cnt_2)
-        plt.scatter(embedding[:,0], embedding[:,1], c=Y, cmap='Paired', s=2.0)
-        #plt.colorbar(boundaries=Y-0.5).set_ticks(np.arange(0,cnt,50))#(Y)
-        plt.colorbar(boundaries=np.arange(0,cnt,100)-50).set_ticks(np.arange(0,cnt,100))
-        plt.title("neibr={}, d_min={:.1f}".format(i,j))
-plt.savefig("umap.png")
+for k in metric:
+    cnt_2=0
+    plt.figure(1,figsize = (14,14))
+    for i in range(2,12,2):
+        for j in np.arange(0,1,0.2):
+            reducer = umap.UMAP(n_neighbors=i, min_dist=j, metric=k, n_components=2)
+            reducer.fit(X)
+            embedding = reducer.transform(X)
+            np.shape(embedding)   
+            if (2<=i<=8 and j==0.2):
+                embedding_best[:,:,int(i/2)-1]=embedding
+            np.shape(embedding)
+            cnt_2+=1
+            plt.subplot(5,5,cnt_2)
+            plt.scatter(embedding[:,0], embedding[:,1], c=Y, cmap='Paired', s=2.0)
+            #plt.colorbar(boundaries=Y-0.5).set_ticks(np.arange(0,cnt,50))#(Y)
+            plt.colorbar(boundaries=np.arange(0,cnt,100)-50).set_ticks(np.arange(0,cnt,100))
+            plt.title("neibr={}, d_min={:.1f}".format(i,j))
+    plt.savefig("umap_{}.png".format(k))
 
 
 # # Clustering sobre neibr={2,4,6,8}, d_min=0.2
 
-# In[56]:
+# In[ ]:
 
 
-#se tomaron estas gráficas:
+#se tomaron estas gráficas para métrica de Minkowski:
 a=embedding_best
 for i in range(4):
     plt.subplot(4,1,i+1)
@@ -106,20 +108,20 @@ for i in range(4):
     plt.title("neibr={}".format(2*i+2))
 
 
-# In[52]:
+# In[ ]:
 
 
 print(np.shape(embedding_best))
 print(1137*2*4)
 
 
-# In[70]:
+# In[ ]:
 
 
 #n_clusters = 10
 #Esto se hace para perplexity=10
 cnt_2=0
-plt.figure(3,figsize = (20,20))
+plt.figure(2,figsize = (20,20))
 for i in range(1,3):
     for n_clusters in range(3,8):
         k_means = sklearn.cluster.KMeans(n_clusters=n_clusters)
