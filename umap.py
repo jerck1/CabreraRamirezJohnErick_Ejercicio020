@@ -62,19 +62,21 @@ print(np.shape(X))
 print(np.shape(Y))
 
 
-# In[71]:
+# In[81]:
 
 
 embedding_best=np.zeros((1137,2,4))
-metric=["euclidean","manhattan","chebyshev","minkowski"]
+metric=["euclidean","manhattan"]
 
 
 # In[ ]:
 
 
+cnt_2=0
 for k in metric:
-    cnt_2=0
-    plt.figure(1,figsize = (14,14))
+    plt.figure(2,figsize = (24,24))
+    #plt.canvas.set_window_title("umap_{}".format(k))
+    #plt.title("umap_{}".format(k))
     for i in range(2,12,2):
         for j in np.arange(0,1,0.2):
             reducer = umap.UMAP(n_neighbors=i, min_dist=j, metric=k, n_components=2)
@@ -85,17 +87,43 @@ for k in metric:
                 embedding_best[:,:,int(i/2)-1]=embedding
             np.shape(embedding)
             cnt_2+=1
-            plt.subplot(5,5,cnt_2)
-            plt.scatter(embedding[:,0], embedding[:,1], c=Y, cmap='Paired', s=2.0)
+            plt.subplot(10,5,cnt_2)
+            plt.scatter(embedding[:,0], embedding[:,1], c=Y, cmap='Paired', s=2.0)#,label="neibr={}, d_min={:.1f}".format(i,j))
             #plt.colorbar(boundaries=Y-0.5).set_ticks(np.arange(0,cnt,50))#(Y)
+            #plt.legend(loc=(1.05,0.25))
             plt.colorbar(boundaries=np.arange(0,cnt,100)-50).set_ticks(np.arange(0,cnt,100))
-            plt.title("neibr={}, d_min={:.1f}".format(i,j))
-    plt.savefig("umap_{}.png".format(k))
+            plt.title("neibr={}, d_min={:.1f},metric={}".format(i,j,k))
+plt.savefig("umap.png")
+
+
+# In[92]:
+
+
+# #ax=[plt.figure(1,figsize = (14,14)),plt.figure(1,figsize = (14,14)),plt.figure(1,figsize = (14,14))]
+# for k,me in enumerate(metric):
+#     cnt_2=0
+#     fig,ax  = plt.subplots(5,5,sharex=False,figsize=(10,12))
+#     for i in range(2,12,2):
+#         for j in np.arange(0,1,0.2):
+#             reducer = umap.UMAP(n_neighbors=i, min_dist=j, metric=me, n_components=2)
+#             reducer.fit(X)
+#             embedding = reducer.transform(X)
+#             np.shape(embedding)   
+#             if (2<=i<=8 and j==0.2):
+#                 embedding_best[:,:,int(i/2)-1]=embedding
+#             np.shape(embedding)
+#             cnt_2+=1
+#             #plt.subplot(5,5,cnt_2)
+#             ax[int(i/2-1)][int(j*10)].scatter(embedding[:,0], embedding[:,1], c=Y, cmap='Paired', s=2.0)
+#             #plt.colorbar(boundaries=Y-0.5).set_ticks(np.arange(0,cnt,50))#(Y)
+#             plt.colorbar(boundaries=np.arange(0,cnt,100)-50).set_ticks(np.arange(0,cnt,100))
+#             ax[int(i/2-1)][int(j*10)].title("neibr={}, d_min={:.1f}".format(i,j))
+#     plt.savefig("umap_{}.png".format(k))
 
 
 # # Clustering sobre neibr={2,4,6,8}, d_min=0.2
 
-# In[ ]:
+# In[83]:
 
 
 #se tomaron estas gráficas para métrica de Minkowski:
@@ -108,20 +136,20 @@ for i in range(4):
     plt.title("neibr={}".format(2*i+2))
 
 
-# In[ ]:
+# In[84]:
 
 
 print(np.shape(embedding_best))
 print(1137*2*4)
 
 
-# In[ ]:
+# In[95]:
 
 
 #n_clusters = 10
 #Esto se hace para perplexity=10
 cnt_2=0
-plt.figure(2,figsize = (20,20))
+plt.figure(2,figsize = (20,15))
 for i in range(1,3):
     for n_clusters in range(3,8):
         k_means = sklearn.cluster.KMeans(n_clusters=n_clusters)
@@ -150,7 +178,9 @@ for i,f in enumerate(files[:n_max]):
  
 
 
-# Por otro lado se observa que al aumentar el número de vecinos cercanos se van formando líneas más "nítidas", de hecho para el caso neighbors=2 no se encuentra un agrupamiento, por otro lado, al aumentar la distancia "min_dist" se van haciendo más gruesas algunas partes de las líneas
+# Se observa que al aumentar el número de vecinos cercanos se van formando líneas más "nítidas", de hecho para el caso neighbors=2 no se encuentra un agrupamiento, por otro lado, al aumentar la distancia "min_dist" se van haciendo más gruesas algunas partes de las líneas. Si miramos diferentes métricas, se observa que la métrica euclidiana separa los datos en líneas para un numero más pequeño de neighbors que en los otros casos.
+
+# Finalmente, al aplicar el k-means clustering se encuentra un mejor agrupamiento para 7 clusters
 
 # In[ ]:
 
